@@ -7,26 +7,30 @@ export async function POST(req: Request) {
   try {
     const { name, email, password } = await req.json();
 
-    if (!name || !email || !password) {
-      return NextResponse.json({ message: "Semua kolom wajib diisi!" }, { status: 400 });
+    // Validasi input dasar
+    if (!name || !email || !password || password.length < 6) {
+      return NextResponse.json(
+        { message: "Semua kolom wajib diisi dan password minimal 6 karakter!" }, 
+        { status: 400 }
+      );
     }
 
     await connectToDatabase();
 
-    // Cek apakah email sudah pernah dipakai
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json({ message: "Email sudah terdaftar! Silakan Login." }, { status: 400 });
     }
 
-    // Acak password agar tidak bisa dibaca hacker
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Simpan akun baru ke database
+    // KEAMANAN KETAT: Paksa role menjadi "user" secara hardcode. 
+    // Mencegah hacker mengirimkan JSON { "role": "admin" }
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
+      role: "user" 
     });
     await newUser.save();
 

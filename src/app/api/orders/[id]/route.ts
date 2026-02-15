@@ -1,19 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Order from "@/models/Order";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../auth/[...nextauth]/route";
 
-// Fungsi untuk meng-update status pesanan
 export async function PATCH(
   req: NextRequest, 
-  { params }: { params: Promise<{ id: string }> } // Params sekarang adalah Promise
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // SATPAM 1: Pastikan yang mengakses adalah Admin yang sah
+    const session = await getServerSession(authOptions);
+    if (!session || (session.user as any)?.role !== "admin") {
+      return NextResponse.json({ message: "Akses Ilegal: Hanya Admin yang diizinkan." }, { status: 403 });
+    }
+
     await connectToDatabase();
     
-    // TUNGGU (await) params-nya dulu sebelum dipakai
     const { id } = await params; 
-    
     const { status } = await req.json();
+
+    // Validasi agar status tidak diisi dengan teks sembarangan oleh hacker
+    const validStatuses = ["Menunggu Konfirmasi", "Diproses", "Sedang Dikirim", "Selesai"];
+    if (!validStatuses.includes(status)) {
+      return NextResponse.json({ message: "Status tidak valid" }, { status: 400 });
+    }
 
     const updatedOrder = await Order.findByIdAndUpdate(
       id, 

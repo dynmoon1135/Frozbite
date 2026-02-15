@@ -23,7 +23,7 @@ export default function Footer() {
           <ul className="space-y-4 text-sm">
             <li className="flex items-start gap-3">
               <MapPin size={20} className="text-orange-500 shrink-0" />
-              <span>Jl. Frozen Food No. 88, Kebayoran Baru, Jakarta Selatan 12345</span>
+              <span>Jl. Frozen Food No. 88, Serpong BSD, Tangerang Selatan 15311</span>
             </li>
             <li className="flex items-center gap-3">
               <Phone size={20} className="text-orange-500 shrink-0" />
@@ -31,7 +31,7 @@ export default function Footer() {
             </li>
             <li className="flex items-center gap-3">
               <Mail size={20} className="text-orange-500 shrink-0" />
-              <span>halo@frozbitesolutions.com</span>
+              <span>dynn135@gmail.com</span>
             </li>
           </ul>
         </div>
@@ -57,7 +57,16 @@ export default function Footer() {
         </div>
       </div>
       <div className="text-center text-sm pt-8 text-slate-500">
-        &copy; {new Date().getFullYear()} FrozBite Solutions. All rights reserved.
+        &copy; {new Date().getFullYear()} FrozBite Solutions. 
+        All Rights Reserved. | 
+        Built by <a 
+          href="https://github.com/dYn-webp" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="hover:text-slate-700 transition-colors"
+        >
+          dYn-webp
+        </a>
       </div>
     </footer>
   );

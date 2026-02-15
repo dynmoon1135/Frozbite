@@ -6,7 +6,11 @@ const OrderSchema = new mongoose.Schema(
     userEmail: { type: String, required: true }, // Untuk tahu siapa yang beli
     items: { type: Array, required: true }, // Daftar belanjaan
     total: { type: Number, required: true },
-    status: { type: String, default: "Menunggu Konfirmasi" },
+    status: { 
+    type: String, 
+    default: "Menunggu Konfirmasi",
+    enum: ["Menunggu Konfirmasi", "Diproses", "Sedang Dikirim", "Selesai"] // Tambahkan "Selesai"
+    },
     customer: {
       name: String,
       phone: String,

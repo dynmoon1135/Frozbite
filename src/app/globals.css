@@ -3,8 +3,13 @@
 @tailwind utilities;
 @import "tailwindcss";
 
-html {
+html, body {
+  /* Ganti 100vw menjadi 100% */
+  max-width: 100%; 
+  overflow-x: hidden;
   scroll-behavior: smooth;
+  /* Mencegah zoom tidak sengaja saat menekan tombol di HP */
+  touch-action: pan-y; 
 }
 
 body {

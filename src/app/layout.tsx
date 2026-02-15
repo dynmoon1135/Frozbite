@@ -7,7 +7,6 @@ import { CartProvider } from '@/context/CartContext';
 import CartDrawer from '@/components/CartDrawer';
 import ChatBot from '@/components/ChatBot';
 import OrderHistoryDrawer from '@/components/OrderHistoryDrawer';
-// IMPORT AUTH PROVIDER DI SINI
 import AuthProvider from '@/components/AuthProvider';
 
 const poppins = Poppins({
@@ -28,16 +27,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" data-scroll-behavior="smooth">
+      {/* Jangan taruh overflow-hidden di body, biarkan standar saja */}
       <body className={`${poppins.className} bg-slate-50 text-slate-800 antialiased`}>
-        {/* BUNGKUS DENGAN AUTH PROVIDER */}
         <AuthProvider>
           <CartProvider>
-            <Navbar />
-            <CartDrawer /> 
-            <OrderHistoryDrawer />
-            <ChatBot />
-            <main className="min-h-screen pt-20">{children}</main>
-            <Footer />
+            
+            {/* INI KUNCI UTAMANYA: Bungkusan Anti-Bocor Kanan Kiri */}
+            <div className="relative w-full max-w-full overflow-x-hidden min-h-screen flex flex-col">
+              <Navbar />
+              <CartDrawer /> 
+              <OrderHistoryDrawer />
+              <ChatBot />
+              <main className="flex-grow pt-20">
+                {children}
+              </main>
+              <Footer />
+            </div>
+
           </CartProvider>
         </AuthProvider>
       </body>
