@@ -1,24 +1,41 @@
-import mongoose from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-const OrderSchema = new mongoose.Schema(
+export interface IOrder extends Document {
+  invoice: string;
+  customer: {
+    name: string;
+    phone: string;
+    address: string;
+    method: string;
+    email: string; // INI KUNCI UTAMANYA: Tambahkan email di sini!
+  };
+  items: any[];
+  total: number;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const OrderSchema = new Schema<IOrder>(
   {
-    invoice: { type: String, required: true, unique: true },
-    userEmail: { type: String, required: true }, // Untuk tahu siapa yang beli
-    items: { type: Array, required: true }, // Daftar belanjaan
+    invoice: { type: String, required: true },
+    customer: {
+      name: { type: String, required: true },
+      phone: { type: String, required: true },
+      address: { type: String, required: true },
+      method: { type: String, required: true },
+      email: { type: String }, // WAJIB ADA AGAR DATA DARI SESSION BISA TERSIMPAN
+    },
+    items: { type: [Schema.Types.Mixed], required: true },
     total: { type: Number, required: true },
     status: { 
-    type: String, 
-    default: "Menunggu Konfirmasi",
-    enum: ["Menunggu Konfirmasi", "Diproses", "Sedang Dikirim", "Selesai"] // Tambahkan "Selesai"
+      type: String, 
+      default: "Menunggu Konfirmasi",
+      enum: ["Menunggu Konfirmasi", "Diproses", "Sedang Dikirim", "Selesai"] 
     },
-    customer: {
-      name: String,
-      phone: String,
-      address: String,
-      method: String,
-    }
   },
   { timestamps: true }
 );
 
-export default mongoose.models.Order || mongoose.model("Order", OrderSchema);
+// Mencegah error OverwriteModelError saat Next.js melakukan recompile
+export default mongoose.models.Order || mongoose.model<IOrder>("Order", OrderSchema);
